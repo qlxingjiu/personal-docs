@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI大模型开发 | 个人简历</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+        }
+        /* 科技感渐变背景 */
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        /* 卡片添加玻璃质感和AI主题装饰 */
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            position: relative;
+            overflow: hidden;
+        }
+        /* AI主题装饰元素 */
+        .card::before {
+            content: "";
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, #7c3aed, #3b82f6);
+            border-radius: 50%;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        .card::after {
+            content: "AI";
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            font-size: 180px;
+            font-weight: 800;
+            color: rgba(124, 58, 237, 0.05);
+            z-index: 0;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        /* 新增：个人头像样式 */
+        .avatar {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid rgba(124, 58, 237, 0.2);
+            transition: all 0.3s ease;
+        }
+        .avatar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
+        }
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        /* 适配手机端头像大小 */
+        @media (max-width: 600px) {
+            .avatar {
+                width: 80px;
+                height: 80px;
+            }
+        }
+        .header h1 {
+            font-size: 36px;
+            margin-bottom: 8px;
+            color: #1e293b;
+            background: linear-gradient(90deg, #7c3aed, #3b82f6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        .header .title {
+            font-size: 18px;
+            color: #475569;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+        .contact {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            color: #64748b;
+        }
+        /* 新增下载按钮样式 */
+        .download-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 24px;
+            background: linear-gradient(90deg, #7c3aed, #3b82f6);
+            color: white;
+            text-decoration: none;
+            border-radius: 28px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(124, 58, 237, 0.2);
+        }
+        /* 优化标题样式，贴合AI主题 */
+        h2 {
+            font-size: 22px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #7c3aed;
+            display: inline-block;
+            color: #1e293b;
+            position: relative;
+        }
+        h2::after {
+            content: "";
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: #7c3aed;
+            border-radius: 50%;
+        }
+        .section {
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+        }
+        .item {
+            margin-bottom: 16px;
+        }
+        .item h3 {
+            font-size: 18px;
+            margin-bottom: 4px;
+            color: #1e293b;
+        }
+        .item .info {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+        ul {
+            padding-left: 20px;
+            color: #475569;
+        }
+        /* 优化技能标签样式，更具科技感 */
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .tag {
+            background: linear-gradient(90deg, #f0f7ff, #ede9fe);
+            color: #7c3aed;
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid rgba(124, 58, 237, 0.1);
+            transition: all 0.3s ease;
+        }
+        .tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.15);
+        }
+        /* AI相关技能标签特殊样式 */
+        .tag.ai {
+            background: linear-gradient(90deg, #7c3aed, #3b82f6);
+            color: white;
+        }
+        /* 超链接样式优化 */
+        a {
+            color: #7c3aed;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <!-- 新增：个人头像代码 -->
+                <div class="avatar">
+                    <img src="avatar.jpg" alt="李卓豪的个人照片">
+                </div>
+                <h1>李卓豪</h1>
+                <div class="title">求职意向：AI大模型应用开发 / 大模型微调 / 智能应用开发/数据工程师</div>
+                <div class="contact">
+                    <span>📞 13431228572</span>
+                    <span>📧 2175492693@qq.com</span>
+                    <span>📍 广东/浙江</span>
+                    <span>🔗 <a href="https://github.com/qlxingjiu" target="_blank">GitHub</a></span>
+                </div>
+                <!-- 简历下载按钮 -->
+                <a href="简历_数据工程师.docx" class="download-btn" download>📄 下载我的简历</a>
+            </div>
+
+            <div class="section">
+                <h2>个人简介</h2>
+                <p>专注于AI大模型应用开发领域，熟悉大模型微调、Prompt工程、RAG技术栈，具备大模型应用落地实战经验。擅长将大模型能力与实际业务场景结合，开发高效、智能的AI应用。熟练掌握Python生态、大模型API调用、数据处理与模型优化。</p>
+            </div>
+
+            <div class="section">
+                <h2>教育经历</h2>
+                <div class="item">
+                    <h3>广东金融学院 | 数学与应用数学</h3>
+                    <div class="info">2021.09 - 2025.06 | 本科</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>技能清单</h2>
+                <div class="skills">
+                    <div class="tag">Python</div>
+                    <div class="tag ai">大模型微调</div>
+                    <div class="tag ai">Prompt工程</div>
+                    <div class="tag ai">RAG技术</div>
+                    <div class="tag">LangChain</div>
+                    <div class="tag">FastAPI</div>
+                    <div class="tag">数据处理</div>
+                    <div class="tag">Git</div>
+                    <div class="tag">HTML/CSS/JS</div>
+                    <div class="tag ai">LLM API调用</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>项目经历</h2>
+                <div class="item">
+                    <h3>大模型智能问答系统</h3>
+                    <div class="info">技术：Python + LangChain + RAG + 开源大模型</div>
+                    <ul>
+                        <li>基于RAG技术构建企业知识库问答系统，解决大模型幻觉问题</li>
+                        <li>实现文档解析、向量存储、检索增强生成全流程</li>
+                        <li>优化Prompt模板，提升问答准确率至90%以上</li>
+                    </ul>
+                </div>
+                <div class="item">
+                    <h3>大模型微调实战项目</h3>
+                    <div class="info">技术：Python + LoRA + HuggingFace + 自定义数据集</div>
+                    <ul>
+                        <li>基于开源大模型进行LoRA轻量化微调，适配特定业务场景</li>
+                        <li>完成数据集清洗、标注、训练流程，模型效果提升显著</li>
+                        <li>封装微调后模型为API服务，提供简单易用的调用接口</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>自我评价</h2>
+                <p>对AI大模型技术有浓厚兴趣和持续学习的热情，具备扎实的编程基础和工程实现能力。注重技术落地，能够将前沿的AI技术转化为实际可用的产品。具备良好的问题分析和解决能力，乐于协作，追求高质量的代码和产品。</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
