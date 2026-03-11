@@ -12,21 +12,19 @@
             font-family: "Microsoft YaHei", Arial, sans-serif;
         }
         :root {
-            --primary: #165DFF;
-            --light: #F5F7FA;
-            --dark: #1D2129;
-            --gray: #86909C;
-            --border: #E5E6EB;
-            --ai-gradient-1: #0d47a1;
-            --ai-gradient-2: #1a237e;
-            --ai-gradient-3: #4a148c;
-            --ai-gradient-4: #880e4f;
-            /* 统一的过渡动画 */
+            --primary: #ff00ff; /* 品红/洋红 - 代码高亮主色 */
+            --secondary: #00ffff; /* 青色 - 代码高亮辅助色 */
+            --tertiary: #00ff00; /* 绿色 - 代码高亮点缀色 */
+            --light: #1a1a1a;    /* 浅黑背景 */
+            --dark: #f0f0f0;     /* 浅文字色 */
+            --gray: #888888;     /* 灰色文字 */
+            --border: #333333;   /* 边框色 */
+            --bg-main: #000000;  /* 纯黑背景 - 代码风格 */
             --transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
         body {
             color: var(--dark);
-            background: #fff;
+            background: var(--bg-main);
             line-height: 1.6;
             overflow: hidden;
         }
@@ -36,14 +34,14 @@
             transition: var(--transition);
         }
         a:hover {
-            color: #0E42D2;
+            color: var(--secondary);
         }
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
-        /* PPT翻页核心样式 */
+        /* 核心布局 */
         .page-container {
             height: 100vh;
             overflow: hidden;
@@ -59,58 +57,39 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding: 40px 0;
+            padding: 100px 0 40px;
             position: relative;
             overflow: hidden;
-            /* 统一所有页面的内边距，避开导航栏 */
-            padding-top: 100px;
+            background: var(--bg-main);
         }
-        /* ========== 第一页样式（取消所有动态效果） ========== */
+        /* 第一页 */
         .page-1 {
             text-align: center;
-            background: #fff;
-            color: var(--dark);
         }
-        /* 移除粒子背景、网格、数据流相关样式（取消动态效果） */
-        #particleCanvas, .grid-bg, .data-flow {
-            display: none !important;
-        }
-        /* 取消标题呼吸动画 */
         .page-1 .title {
             font-size: 18px;
             color: var(--primary);
             margin-bottom: 20px;
             font-weight: 500;
-            text-shadow: 0 1px 5px rgba(0,0,0,0.05);
-            /* 移除呼吸动画 */
-            animation: none !important;
-        }
-        .page-1 .container {
-            position: relative;
-            z-index: 2;
         }
         .page-1 h1 {
             font-size: 32px;
             margin-bottom: 10px;
-            text-shadow: 0 0 5px rgba(22, 93, 255, 0.1);
-            color: var(--dark);
+            color: var(--secondary);
         }
         .page-1 .desc {
             max-width: 800px;
             margin: 0 auto 30px;
             font-size: 16px;
             color: var(--gray);
-            text-shadow: 0 1px 5px rgba(0,0,0,0.05);
         }
-        /* 联系方式 - 恢复悬浮显示效果 */
+        /* 联系方式 */
         .page-1 .contact {
             display: flex;
             justify-content: center;
             gap: 30px;
             flex-wrap: wrap;
-            font-size: 14px;
             margin-bottom: 20px;
-            color: var(--gray);
         }
         .contact-item {
             position: relative;
@@ -120,16 +99,14 @@
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: rgba(22, 93, 255, 0.05);
-            border: 1px solid rgba(22, 93, 255, 0.2);
-            /* 恢复过渡动画 */
+            background: rgba(255, 0, 255, 0.1);
+            border: 1px solid rgba(255, 0, 255, 0.2);
             transition: var(--transition);
             cursor: pointer;
         }
         .contact-item i {
             font-size: 18px;
             color: var(--primary);
-            /* 恢复过渡动画 */
             transition: var(--transition);
         }
         .contact-item .contact-text {
@@ -138,7 +115,7 @@
             visibility: hidden;
             min-width: 120px;
             padding: 6px 12px;
-            background: rgba(15, 32, 39, 0.95);
+            background: rgba(30, 30, 30, 0.95);
             border: 1px solid var(--primary);
             border-radius: 6px;
             color: #fff;
@@ -147,7 +124,6 @@
             transform: translateY(10px);
             transition: var(--transition);
             z-index: 10;
-            /* 调整提示框位置，避免遮挡 */
             top: -50px;
         }
         .contact-item .contact-text::after {
@@ -160,11 +136,10 @@
             border-style: solid;
             border-color: var(--primary) transparent transparent transparent;
         }
-        /* 恢复悬浮效果 */
         .contact-item:hover {
-            background: rgba(22, 93, 255, 0.1);
+            background: rgba(255, 0, 255, 0.2);
             transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(22,93,255,0.15);
+            box-shadow: 0 4px 8px rgba(255,0,255,0.2);
         }
         .contact-item:hover .contact-text {
             opacity: 1;
@@ -172,46 +147,33 @@
             transform: translateY(0);
         }
         .contact-item:hover i {
-            color: #0E42D2;
+            color: var(--secondary);
             transform: scale(1.1);
         }
-        .page-1 .contact a {
-            color: var(--primary);
-        }
-        .page-1 .contact a:hover {
-            color: #0E42D2;
-        }
-        /* ========== 导航栏样式 - 收缩展开效果 ========== */
+        /* 导航栏 */
         .nav {
-            padding: 20px 0;
-            border-bottom: 1px solid rgba(22, 93, 255, 0.1);
             position: fixed;
             top: 0;
             right: 0;
-            bottom: 0;
-            width: 200px; /* 导航栏完整宽度 */
-            background: rgba(255, 255, 255, 0.95);
+            height: 100vh;
+            width: 200px;
+            background: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(8px);
             z-index: 100;
-            height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            /* 核心：默认收缩到右侧，只显示20px宽度 */
             transform: translateX(calc(100% - 20px));
             transition: var(--transition);
-            /* 增加鼠标指针提示 */
             cursor: pointer;
+            border-left: 1px solid var(--border);
         }
-        /* 鼠标悬停时完全展开 */
         .nav:hover {
             transform: translateX(0);
-            background: rgba(255, 255, 255, 0.98);
-            /* 展开时恢复默认指针 */
+            background: rgba(0, 0, 0, 0.98);
             cursor: default;
         }
-        /* 增加导航栏边缘的视觉提示 */
         .nav::before {
             content: "☰";
             position: absolute;
@@ -220,7 +182,6 @@
             transform: translateY(-50%);
             font-size: 18px;
             color: var(--primary);
-            opacity: 1;
             transition: var(--transition);
             z-index: 101;
         }
@@ -233,17 +194,14 @@
             justify-content: center;
             align-items: center;
             width: 100%;
-            gap: 20px; /* 增加元素间距 */
-            /* 隐藏溢出内容（收缩时） */
+            gap: 20px;
             overflow: hidden;
         }
         .nav .name {
             font-size: 20px;
             font-weight: 700;
-            color: var(--dark);
-            text-shadow: 0 0 8px rgba(22, 93, 255, 0.1);
-            margin-bottom: 20px; /* 增加与导航链接的间距 */
-            /* 收缩时隐藏文字 */
+            color: var(--secondary);
+            margin-bottom: 20px;
             opacity: 0;
             transition: opacity 0.3s 0.1s;
         }
@@ -255,8 +213,6 @@
             flex-direction: column;
             gap: 15px;
             align-items: center;
-            height: auto; /* 取消固定高度 */
-            /* 收缩时隐藏链接 */
             opacity: 0;
             transition: opacity 0.3s 0.15s;
         }
@@ -285,7 +241,7 @@
         .nav .tags a:hover::after {
             width: 100%;
         }
-        /* 简历下载按钮 - 统一样式 */
+        /* 按钮样式 */
         .resume-download {
             display: inline-flex;
             align-items: center;
@@ -293,35 +249,33 @@
             padding: 6px 18px;
             height: 36px;
             background: var(--primary);
-            color: #fff !important;
+            color: #000 !important;
             border-radius: 6px;
             font-size: 16px;
             font-weight: 500;
-            box-shadow: 0 2px 8px rgba(22,93,255,0.3);
+            box-shadow: 0 2px 8px rgba(255,0,255,0.3);
             transition: var(--transition);
             white-space: nowrap;
             border: none;
-            margin-top: 10px; /* 增加与其他链接的间距 */
+            margin-top: 10px;
+            cursor: pointer;
         }
         .resume-download:hover {
-            background: #0E42D2;
+            background: var(--secondary);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(22,93,255,0.4);
+            box-shadow: 0 4px 12px rgba(0,255,255,0.4);
         }
         .resume-download i {
             margin-right: 8px;
             font-size: 14px;
         }
-        /* 第2页：技术领域 - 统一风格 */
-        .page-2 {
-            background: var(--light);
-        }
+        /* 通用标题 */
         .section-title {
             font-size: 24px;
             text-align: center;
             margin-bottom: 40px;
             position: relative;
-            color: var(--dark);
+            color: var(--secondary);
         }
         .section-title::after {
             content: "";
@@ -333,8 +287,9 @@
             left: 50%;
             transform: translateX(-50%);
             border-radius: 2px;
-            box-shadow: 0 0 8px rgba(22,93,255,0.3);
+            box-shadow: 0 0 8px rgba(255,0,255,0.3);
         }
+        /* 技术领域 */
         .tech-list {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -343,18 +298,18 @@
             margin: 0 auto;
         }
         .tech-item {
-            background: #fff;
+            background: var(--light);
             padding: 30px 20px;
             border-radius: 8px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
             transition: var(--transition);
-            border: 1px solid transparent;
+            border: 1px solid var(--border);
         }
         .tech-item:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(22,93,255,0.1);
-            border-color: rgba(22,93,255,0.2);
+            box-shadow: 0 5px 15px rgba(255,0,255,0.1);
+            border-color: rgba(255, 0, 255, 0.2);
         }
         .tech-item i {
             font-size: 32px;
@@ -363,23 +318,20 @@
             transition: var(--transition);
         }
         .tech-item:hover i {
-            color: #0E42D2;
+            color: var(--secondary);
             transform: scale(1.1);
         }
         .tech-item h3 {
             font-size: 18px;
             margin-bottom: 10px;
-            color: var(--dark);
+            color: var(--tertiary);
         }
         .tech-item p {
             color: var(--gray);
             font-size: 14px;
             line-height: 1.6;
         }
-        /* 第3页：项目实践 - 统一风格 */
-        .page-3 {
-            background: #fff;
-        }
+        /* 项目实践 */
         .project-list {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -392,15 +344,15 @@
             border-radius: 8px;
             overflow: hidden;
             transition: var(--transition);
-            background: #fff;
+            background: var(--light);
         }
         .project-item:hover {
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            border-color: rgba(22,93,255,0.2);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            border-color: rgba(255, 0, 255, 0.2);
             transform: translateY(-3px);
         }
         .project-item .project-header {
-            background: var(--light);
+            background: var(--bg-main);
             padding: 20px;
             border-bottom: 1px solid var(--border);
         }
@@ -411,7 +363,7 @@
         }
         .project-item .project-header .tech-stack {
             font-size: 14px;
-            color: var(--gray);
+            color: var(--tertiary);
         }
         .project-item .project-body {
             padding: 20px;
@@ -428,36 +380,33 @@
             transition: var(--transition);
         }
         .project-item:hover .project-body li {
-            color: #0E42D2;
+            color: var(--secondary);
         }
         .project-item .project-body li::before {
             content: "✓";
-            color: var(--primary);
+            color: var(--tertiary);
             margin-right: 8px;
             margin-top: 4px;
             transition: var(--transition);
         }
         .project-item:hover .project-body li::before {
             transform: scale(1.2);
-            color: #0E42D2;
+            color: var(--primary);
         }
-        /* 第4页：技术理念 - 统一风格 */
-        .page-4 {
-            background: var(--light);
-        }
+        /* 技术理念 */
         .idea-content {
             max-width: 900px;
             margin: 0 auto;
-            background: #fff;
+            background: var(--light);
             padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border: 1px solid transparent;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
             transition: var(--transition);
         }
         .idea-content:hover {
-            border-color: rgba(22,93,255,0.2);
-            box-shadow: 0 5px 15px rgba(22,93,255,0.08);
+            border-color: rgba(255, 0, 255, 0.2);
+            box-shadow: 0 5px 15px rgba(255,0,255,0.1);
         }
         .idea-content p {
             font-size: 16px;
@@ -465,73 +414,43 @@
             line-height: 1.8;
             color: var(--dark);
         }
-        .idea-content p:last-child {
-            margin-bottom: 0;
-        }
-        /* 第5页：联系方式 - 统一风格 */
-        .page-5 {
-            text-align: center;
-            background: #fff;
-        }
+        /* 联系我 */
         .contact-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             padding: 8px 24px;
             height: 40px;
-            line-height: 24px;
             background: var(--primary);
-            color: #fff;
+            color: #000;
             border-radius: 6px;
             font-size: 16px;
             margin: 20px 10px;
             border: none;
             cursor: pointer;
             transition: var(--transition);
-            box-shadow: 0 2px 8px rgba(22,93,255,0.3);
-            /* 修复邮件按钮问题：改为按钮点击复制邮箱 */
-            background-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(255,0,255,0.3);
+        }
+        .contact-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,255,255,0.4);
         }
         .contact-btn i {
             margin-right: 8px;
-        }
-        .contact-btn:hover {
-            background: #0E42D2;
-            color: #fff;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(22,93,255,0.4);
         }
         .other {
             font-size: 14px;
             color: var(--gray);
             margin-top: 10px;
         }
-        /* 复制成功提示 */
-        .copy-toast {
-            position: fixed;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(22, 93, 255, 0.9);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 4px;
-            font-size: 14px;
-            opacity: 0;
-            transition: opacity 0.3s;
-            z-index: 999;
-        }
-        .copy-toast.show {
-            opacity: 1;
-        }
-        /* 翻页指示器 - 调整位置（避开右侧导航栏） */
+        /* 翻页指示器 */
         .pagination {
             position: fixed;
-            right: 50px; /* 调整为50px，适配收缩的导航栏 */
+            right: 50px;
             top: 50%;
             transform: translateY(-50%);
             z-index: 99;
-            /* 导航栏展开时稍微左移 */
             transition: var(--transition);
         }
         .nav:hover ~ .page-container .pagination {
@@ -550,14 +469,10 @@
         .pagination-dot.active {
             background: var(--primary);
             transform: scale(1.2);
-            border-color: rgba(22, 93, 255, 0.5);
-            animation: dotPulse 2s ease-in-out infinite alternate;
+            border-color: rgba(255, 0, 255, 0.5);
+            box-shadow: 0 0 8px rgba(255, 0, 255, 0.6);
         }
-        @keyframes dotPulse {
-            0% { opacity: 0.8; }
-            100% { opacity: 1; box-shadow: 0 0 8px rgba(22, 93, 255, 0.6); }
-        }
-        /* 翻页提示箭头 - 统一风格 */
+        /* 翻页提示 */
         .scroll-tip {
             position: fixed;
             bottom: 30px;
@@ -568,20 +483,31 @@
             animation: bounce 2s infinite;
             cursor: pointer;
             z-index: 99;
-            text-shadow: 0 0 10px rgba(22, 93, 255, 0.3);
-            transition: var(--transition);
-        }
-        .scroll-tip:hover {
-            color: #0E42D2;
-            transform: translateX(-50%) scale(1.2);
         }
         @keyframes bounce {
             0%, 100% { transform: translateX(-50%) translateY(0); }
             50% { transform: translateX(-50%) translateY(-10px); }
         }
-        /* 响应式适配 - 适配右侧导航栏 */
+        /* 复制提示 */
+        .copy-toast {
+            position: fixed;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 0, 255, 0.9);
+            color: #000;
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 999;
+        }
+        .copy-toast.show {
+            opacity: 1;
+        }
+        /* 响应式 */
         @media (max-width: 768px) {
-            /* 移动端导航栏恢复顶部显示，取消收缩效果 */
             .nav {
                 top: 0;
                 left: 0;
@@ -590,8 +516,9 @@
                 width: 100%;
                 height: 80px;
                 flex-direction: row;
-                padding: 10px 0;
                 transform: translateX(0);
+                border-left: none;
+                border-bottom: 1px solid var(--border);
             }
             .nav::before {
                 display: none;
@@ -608,7 +535,6 @@
             .nav .tags {
                 flex-direction: row;
                 gap: 10px;
-                height: 32px;
                 opacity: 1;
             }
             .nav .tags a {
@@ -621,10 +547,6 @@
                 font-size: 14px;
                 margin-top: 0;
             }
-            .page-1 h1 {
-                font-size: 28px;
-            }
-            /* 所有页面统一调整内边距 */
             .page {
                 padding-top: 90px;
             }
@@ -637,12 +559,6 @@
             .idea-content {
                 padding: 20px;
             }
-            .contact-btn {
-                margin: 20px 5px;
-                padding: 6px 18px;
-                font-size: 14px;
-            }
-            /* 移动端翻页指示器恢复原位置 */
             .pagination {
                 right: 15px !important;
             }
@@ -650,9 +566,6 @@
                 width: 8px;
                 height: 8px;
                 margin: 10px 0;
-            }
-            .page-1 .contact {
-                gap: 15px;
             }
         }
         @media (max-width: 480px) {
@@ -662,26 +575,16 @@
             .nav .tags a:not(.resume-download) {
                 display: none;
             }
-            .nav .tags {
-                gap: 0;
-            }
             .contact-item {
                 width: 36px;
                 height: 36px;
             }
-            .contact-item i {
-                font-size: 16px;
-            }
-            /* 移动端调整内边距 */
             .page {
                 padding-top: 80px;
             }
         }
     </style>
-    <!-- 引入图标库 -->
     <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- 粒子库CDN（保留但不使用） -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 </head>
 <body>
     <!-- 导航栏 -->
@@ -701,18 +604,14 @@
         </div>
     </nav>
 
-    <!-- PPT翻页容器 -->
+    <!-- 翻页容器 -->
     <div class="page-container">
         <div class="pages" id="pages">
-            <!-- 第1页：个人名片（已取消动态效果） -->
+            <!-- 首页 -->
             <div class="page page-1" id="page1">
-                <canvas id="particleCanvas"></canvas>
-                <div class="grid-bg"></div>
-                <div class="data-flow" id="dataFlow"></div>
-                
                 <div class="container">
                     <div class="avatar">
-                        <img src="lzh.png" alt="李卓豪个人照片" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid rgba(22, 93, 255, 0.1); box-shadow: 0 0 20px rgba(22, 93, 255, 0.15);">
+                        <img src="https://via.placeholder.com/120" alt="李卓豪个人照片" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid rgba(255, 0, 255, 0.1); box-shadow: 0 0 20px rgba(255, 0, 255, 0.15);">
                     </div>
                     <h1>李卓豪</h1>
                     <p class="title">AI大模型应用开发 | 大模型微调 | 智能应用落地</p>
@@ -721,7 +620,6 @@
                         擅长RAG检索增强生成、大模型轻量化微调、Prompt工程优化，通过Python生态实现AI技术的工程化开发，
                         追求将前沿AI技术转化为高效、可落地的智能应用。
                     </p>
-                    <!-- 联系方式（恢复悬浮显示） -->
                     <div class="contact">
                         <div class="contact-item">
                             <i class="fas fa-phone"></i>
@@ -746,7 +644,7 @@
                 </div>
             </div>
 
-            <!-- 第2页：技术领域 -->
+            <!-- 技术领域 -->
             <div class="page page-2" id="page2">
                 <div class="container">
                     <h2 class="section-title">核心技术领域</h2>
@@ -775,7 +673,7 @@
                 </div>
             </div>
 
-            <!-- 第3页：项目实践 -->
+            <!-- 项目实践 -->
             <div class="page page-3" id="page3">
                 <div class="container">
                     <h2 class="section-title">项目实践</h2>
@@ -827,7 +725,7 @@
                 </div>
             </div>
 
-            <!-- 第4页：技术理念 -->
+            <!-- 技术理念 -->
             <div class="page page-4" id="page4">
                 <div class="container">
                     <h2 class="section-title">我的技术理念</h2>
@@ -839,12 +737,11 @@
                 </div>
             </div>
 
-            <!-- 第5页：联系方式 -->
+            <!-- 联系我 -->
             <div class="page page-5" id="page5">
                 <div class="container">
                     <h2 class="section-title">联系我</h2>
                     <p>如果你有AI大模型应用落地需求、技术交流合作，欢迎随时联系</p>
-                    <!-- 修复：改为按钮复制邮箱，避免跳转问题 -->
                     <button class="contact-btn" id="copyEmailBtn">
                         <i class="fas fa-copy"></i> 复制邮箱地址
                     </button>
@@ -865,22 +762,17 @@
             <div class="pagination-dot" data-page="4"></div>
         </div>
 
-        <!-- 翻页提示箭头 -->
+        <!-- 翻页提示 -->
         <div class="scroll-tip" id="scrollTip">
             <i class="fas fa-chevron-down"></i>
         </div>
         
-        <!-- 复制成功提示框 -->
+        <!-- 复制提示 -->
         <div class="copy-toast" id="copyToast">邮箱地址已复制！</div>
     </div>
 
-    <!-- 翻页逻辑JS（移除粒子和数据流相关代码 + 新增复制邮箱功能） -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 移除AI数据流动画生成代码
-            
-            // 移除粒子背景初始化代码
-
             // 翻页逻辑
             const pagesContainer = document.getElementById('pages');
             const paginationDots = document.querySelectorAll('.pagination-dot');
@@ -899,33 +791,26 @@
                 scrollTip.style.display = currentPage === totalPages - 1 ? 'none' : 'block';
             }
 
+            // 滚轮翻页
             document.addEventListener('wheel', (e) => {
-                if (e.deltaY > 0) {
-                    goToPage(currentPage + 1);
-                } else {
-                    goToPage(currentPage - 1);
-                }
+                e.deltaY > 0 ? goToPage(currentPage + 1) : goToPage(currentPage - 1);
             }, { passive: true });
 
+            // 键盘翻页
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'ArrowDown') {
-                    goToPage(currentPage + 1);
-                } else if (e.key === 'ArrowUp') {
-                    goToPage(currentPage - 1);
-                }
+                if (e.key === 'ArrowDown') goToPage(currentPage + 1);
+                else if (e.key === 'ArrowUp') goToPage(currentPage - 1);
             });
 
+            // 指示器点击
             paginationDots.forEach(dot => {
-                dot.addEventListener('click', () => {
-                    const pageIndex = parseInt(dot.dataset.page);
-                    goToPage(pageIndex);
-                });
+                dot.addEventListener('click', () => goToPage(parseInt(dot.dataset.page)));
             });
 
-            scrollTip.addEventListener('click', () => {
-                goToPage(currentPage + 1);
-            });
+            // 提示箭头点击
+            scrollTip.addEventListener('click', () => goToPage(currentPage + 1));
 
+            // 导航链接点击
             pageLinks.forEach((link, index) => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -933,31 +818,20 @@
                 });
             });
 
-            if (totalPages === 1) {
-                scrollTip.style.display = 'none';
-            }
-
-            // 新增：复制邮箱功能
+            // 复制邮箱
             const copyEmailBtn = document.getElementById('copyEmailBtn');
             const copyToast = document.getElementById('copyToast');
             const email = '2175492693@qq.com';
 
             copyEmailBtn.addEventListener('click', () => {
-                // 复制邮箱到剪贴板
                 navigator.clipboard.writeText(email).then(() => {
-                    // 显示提示
                     copyToast.classList.add('show');
-                    // 3秒后隐藏提示
-                    setTimeout(() => {
-                        copyToast.classList.remove('show');
-                    }, 3000);
+                    setTimeout(() => copyToast.classList.remove('show'), 3000);
                 }).catch(err => {
                     alert('复制失败，请手动复制：' + email);
-                    console.error('复制失败:', err);
                 });
             });
         });
     </script>
 </body>
-
 </html>
