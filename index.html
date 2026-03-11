@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>李卓豪 - AI大模型应用开发</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", Arial, sans-serif;
+        }
+        :root {
+            --primary: #165DFF;
+            --light: #F5F7FA;
+            --dark: #1D2129;
+            --gray: #86909C;
+            --border: #E5E6EB;
+            --bg-gradient: linear-gradient(135deg, #0F2027 0%, #203A43 50%, #2C5364 100%);
+        }
+        body {
+            color: var(--dark);
+            background: #fff;
+            line-height: 1.6;
+            overflow: hidden; /* 隐藏全局滚动条 */
+        }
+        a {
+            text-decoration: none;
+            color: var(--primary);
+            transition: all 0.3s;
+        }
+        a:hover {
+            color: #0E42D2;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        /* PPT翻页核心样式 */
+        .page-container {
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        .pages {
+            height: 100%;
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform: translateY(0);
+        }
+        .page {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 40px 0;
+            position: relative; /* 为动态背景预留定位 */
+            overflow: hidden; /* 隐藏超出的粒子效果 */
+        }
+        /* ========== 第一页AI动态背景核心样式 ========== */
+        .page-1 {
+            text-align: center;
+            padding-top: 80px; /* 给导航栏留空间 */
+            background: var(--bg-gradient);
+            color: #fff;
+        }
+        /* 粒子背景画布 */
+        #particleCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.7;
+        }
+        /* 数据网格层 */
+        .grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background-image: 
+                linear-gradient(rgba(22, 93, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(22, 93, 255, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: gridMove 20s linear infinite;
+        }
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 40px 40px; }
+        }
+        /* 第一页内容层（置顶） */
+        .page-1 .container {
+            position: relative;
+            z-index: 2;
+        }
+        .page-1 h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        .page-1 .title {
+            font-size: 18px;
+            color: #4080FF;
+            margin-bottom: 20px;
+            font-weight: 500;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        }
+        .page-1 .desc {
+            max-width: 800px;
+            margin: 0 auto 30px;
+            font-size: 16px;
+            color: #E5E9F2;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        }
+        .page-1 .contact {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            font-size: 14px;
+            margin-bottom: 20px;
+            color: #E5E9F2;
+        }
+        .page-1 .contact i {
+            margin-right: 6px;
+            color: #4080FF;
+        }
+        .page-1 .contact a {
+            color: #4080FF;
+        }
+        .page-1 .contact a:hover {
+            color: #69B1FF;
+        }
+        /* ========== 导航栏样式 ========== */
+        .nav {
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 32, 39, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            height: 80px;
+            display: flex;
+            align-items: center;
+        }
+        .nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .nav .name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+        }
+        .nav .tags {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            height: 36px;
+        }
+        .nav .tags a {
+            font-size: 16px;
+            color: #E5E9F2;
+            line-height: 36px;
+        }
+        .nav .tags a:hover {
+            color: #4080FF;
+        }
+        /* 简历下载按钮 - 统一尺寸 */
+        .resume-download {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 18px;
+            height: 36px;
+            background: #165DFF;
+            color: #fff !important;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(22,93,255,0.3);
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        .resume-download:hover {
+            background: #0E42D2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(22,93,255,0.4);
+        }
+        .resume-download i {
+            margin-right: 8px;
+            font-size: 14px;
+        }
+        /* 第2页：技术领域 */
+        .page-2 {
+            background: var(--light);
+        }
+        .section-title {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        .section-title::after {
+            content: "";
+            width: 60px;
+            height: 3px;
+            background: var(--primary);
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+        .tech-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .tech-item {
+            background: #fff;
+            padding: 30px 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+        .tech-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(22,93,255,0.1);
+        }
+        .tech-item i {
+            font-size: 32px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        .tech-item h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .tech-item p {
+            color: var(--gray);
+            font-size: 14px;
+        }
+        /* 第3页：项目实践 */
+        .project-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .project-item {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .project-item:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+        .project-item .project-header {
+            background: var(--light);
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        .project-item .project-header h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        .project-item .project-header .tech-stack {
+            font-size: 14px;
+            color: var(--gray);
+        }
+        .project-item .project-body {
+            padding: 20px;
+        }
+        .project-item .project-body ul {
+            list-style: none;
+        }
+        .project-item .project-body li {
+            font-size: 15px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+        }
+        .project-item .project-body li::before {
+            content: "✓";
+            color: var(--primary);
+            margin-right: 8px;
+            margin-top: 4px;
+        }
+        /* 第4页：技术理念 */
+        .page-4 {
+            background: var(--light);
+        }
+        .idea-content {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .idea-content p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+        .idea-content p:last-child {
+            margin-bottom: 0;
+        }
+        /* 第5页：联系方式 */
+        .page-5 {
+            text-align: center;
+        }
+        .contact-btn {
+            display: inline-block;
+            padding: 8px 24px;
+            height: 40px;
+            line-height: 24px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: 6px;
+            font-size: 16px;
+            margin: 20px 10px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .contact-btn:hover {
+            background: #0E42D2;
+            color: #fff;
+        }
+        .other {
+            font-size: 14px;
+            color: var(--gray);
+            margin-top: 10px;
+        }
+        /* 翻页指示器 */
+        .pagination {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 99;
+        }
+        .pagination-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--gray);
+            margin: 15px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .pagination-dot.active {
+            background: var(--primary);
+            transform: scale(1.2);
+        }
+        /* 翻页提示箭头 */
+        .scroll-tip {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--primary);
+            font-size: 24px;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            z-index: 99;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+        /* 响应式适配 */
+        @media (max-width: 768px) {
+            .nav .tags {
+                gap: 10px;
+                height: 32px;
+            }
+            .nav .tags a {
+                font-size: 14px;
+                line-height: 32px;
+            }
+            .resume-download {
+                padding: 4px 12px;
+                height: 32px;
+                font-size: 14px;
+            }
+            .page-1 h1 {
+                font-size: 28px;
+            }
+            .tech-list {
+                grid-template-columns: 1fr 1fr;
+            }
+            .project-list {
+                grid-template-columns: 1fr;
+            }
+            .idea-content {
+                padding: 20px;
+            }
+            .contact-btn {
+                margin: 20px 5px;
+                padding: 6px 18px;
+                font-size: 14px;
+            }
+            .pagination {
+                right: 15px;
+            }
+            .pagination-dot {
+                width: 8px;
+                height: 8px;
+                margin: 10px 0;
+            }
+            .grid-bg {
+                background-size: 30px 30px;
+            }
+        }
+        @media (max-width: 480px) {
+            .tech-list {
+                grid-template-columns: 1fr;
+            }
+            .nav .tags a:not(.resume-download) {
+                display: none; /* 移动端隐藏导航标签，仅保留下载按钮 */
+            }
+            .nav .tags {
+                gap: 0;
+            }
+            .grid-bg {
+                background-size: 20px 20px;
+            }
+            .page-1 .contact {
+                gap: 15px;
+            }
+        }
+    </style>
+    <!-- 引入图标库 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 更换更稳定的粒子库CDN -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="nav">
+        <div class="container">
+            <div class="name">李卓豪</div>
+            <div class="tags">
+                <a href="#page1" class="page-link">首页</a>
+                <a href="#page2" class="page-link">技术领域</a>
+                <a href="#page3" class="page-link">项目实践</a>
+                <a href="#page4" class="page-link">技术理念</a>
+                <a href="#page5" class="page-link">联系我</a>
+                <a href="简历_数据工程师.docx" download="简历_数据工程师.docx" class="resume-download">
+                    <i class="fas fa-download"></i> 下载简历
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- PPT翻页容器 -->
+    <div class="page-container">
+        <div class="pages" id="pages">
+            <!-- 第1页：个人名片（带AI动态背景） -->
+            <div class="page page-1" id="page1">
+                <!-- 粒子背景画布 -->
+                <canvas id="particleCanvas"></canvas>
+                <!-- 数据网格层 -->
+                <div class="grid-bg"></div>
+                
+                <div class="container">
+                    <div class="avatar">
+                        <img src="https://via.placeholder.com/120" alt="李卓豪个人照片" style="width: 120px; height: 120px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.2);">
+                    </div>
+                    <h1>李卓豪</h1>
+                    <p class="title">AI大模型应用开发 | 大模型微调 | 智能应用落地</p>
+                    <p class="desc">
+                        扎根AI大模型应用领域，以数学专业为底层支撑，聚焦大模型与实际业务的融合落地。
+                        擅长RAG检索增强生成、大模型轻量化微调、Prompt工程优化，通过Python生态实现AI技术的工程化开发，
+                        追求将前沿AI技术转化为高效、可落地的智能应用。
+                    </p>
+                    <div class="contact">
+                        <p><i class="fas fa-phone"></i>13431228572</p>
+                        <p><i class="fas fa-envelope"></i>2175492693@qq.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i>广东 / 浙江</p>
+                        <p><i class="fab fa-github"></i><a href="https://github.com/qlxingjiu" target="_blank">GitHub</a></p>
+                    </div>
+                    <a href="简历_数据工程师.docx" download="简历_数据工程师.docx" class="resume-download">
+                        <i class="fas fa-file-word"></i> 下载我的简历
+                    </a>
+                </div>
+            </div>
+
+            <!-- 第2页：技术领域 -->
+            <div class="page page-2" id="page2">
+                <div class="container">
+                    <h2 class="section-title">核心技术领域</h2>
+                    <div class="tech-list">
+                        <div class="tech-item">
+                            <i class="fas fa-search-plus"></i>
+                            <h3>RAG技术落地</h3>
+                            <p>文档解析、向量存储、检索策略设计，解决大模型幻觉问题</p>
+                        </div>
+                        <div class="tech-item">
+                            <i class="fas fa-robot"></i>
+                            <h3>大模型微调</h3>
+                            <p>LoRA轻量化微调、自定义数据集构建、业务场景适配训练</p>
+                        </div>
+                        <div class="tech-item">
+                            <i class="fas fa-pen-nib"></i>
+                            <h3>Prompt工程</h3>
+                            <p>模板优化、交互逻辑设计，提升大模型响应精度与适配性</p>
+                        </div>
+                        <div class="tech-item">
+                            <i class="fas fa-code"></i>
+                            <h3>工程化开发</h3>
+                            <p>FastAPI接口封装、LangChain生态、数据处理全流程实现</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第3页：项目实践 -->
+            <div class="page page-3" id="page3">
+                <div class="container">
+                    <h2 class="section-title">项目实践</h2>
+                    <div class="project-list">
+                        <div class="project-item">
+                            <div class="project-header">
+                                <h3>大模型智能问答系统</h3>
+                                <p class="tech-stack">技术栈：Python + LangChain + RAG + 向量存储 + 开源大模型</p>
+                            </div>
+                            <div class="project-body">
+                                <ul>
+                                    <li>构建企业专属知识库，实现结构化/非结构化数据全流程解析与处理</li>
+                                    <li>设计高效向量检索策略，完成数据规范化存储与快速调取</li>
+                                    <li>优化Prompt模板与交互逻辑，将问答准确率提升至90%以上</li>
+                                    <li>解决大模型幻觉问题，降低非专业人员数据查询门槛，赋能业务决策</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="project-item">
+                            <div class="project-header">
+                                <h3>大模型轻量化微调实战</h3>
+                                <p class="tech-stack">技术栈：Python + LoRA + HuggingFace + 自定义数据集 + FastAPI</p>
+                            </div>
+                            <div class="project-body">
+                                <ul>
+                                    <li>完成业务场景化数据集采集、清洗、标注、脱敏全流程处理</li>
+                                    <li>基于HuggingFace搭建微调数据管道，实现训练数据高效迭代</li>
+                                    <li>通过LoRA轻量化微调，完成开源大模型与业务场景的定制化适配</li>
+                                    <li>将微调模型工程化封装为标准化API服务，搭建日志与监控体系</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第4页：技术理念 -->
+            <div class="page page-4" id="page4">
+                <div class="container">
+                    <h2 class="section-title">我的技术理念</h2>
+                    <div class="idea-content">
+                        <p>技术的价值在于落地——这是我深耕AI大模型应用领域的核心准则。作为数学专业背景的开发者，我始终相信严谨的逻辑是技术落地的基础，而持续的实践是技术成长的核心。</p>
+                        <p>在大模型应用开发中，我不追求单纯的技术堆砌，而是聚焦「业务需求」与「技术能力」的精准匹配：用RAG解决信息真实性问题，用轻量化微调降低落地成本，用工程化开发保障应用稳定性，让前沿的AI技术真正为业务创造价值。</p>
+                        <p>AI领域技术更新迭代迅速，保持持续学习的热情是基本要求。我始终以「开发者+实践者」的双重身份，在项目中积累经验，在学习中优化技术，致力于成为能将AI大模型技术真正落地的应用型开发者。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第5页：联系方式 -->
+            <div class="page page-5" id="page5">
+                <div class="container">
+                    <h2 class="section-title">联系我</h2>
+                    <p>如果你有AI大模型应用落地需求、技术交流合作，欢迎随时联系</p>
+                    <a href="mailto:2175492693@qq.com" class="contact-btn"><i class="fas fa-paper-plane"></i> 发送邮件</a>
+                    <a href="简历_数据工程师.docx" download="简历_数据工程师.docx" class="resume-download">
+                        <i class="fas fa-download"></i> 简历下载（数据工程师）
+                    </a>
+                    <p class="other">也可通过GitHub/电话直接沟通，期待与你一起探索AI大模型的落地可能</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 翻页指示器 -->
+        <div class="pagination" id="pagination">
+            <div class="pagination-dot active" data-page="0"></div>
+            <div class="pagination-dot" data-page="1"></div>
+            <div class="pagination-dot" data-page="2"></div>
+            <div class="pagination-dot" data-page="3"></div>
+            <div class="pagination-dot" data-page="4"></div>
+        </div>
+
+        <!-- 翻页提示箭头 -->
+        <div class="scroll-tip" id="scrollTip">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </div>
+
+    <!-- 翻页逻辑JS + 粒子背景初始化 -->
+    <script>
+        // 确保DOM加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // ========== 粒子背景初始化 ==========
+            // 手动定义particlesJS函数（兼容部分浏览器）
+            window.particlesJS = window.particlesJS || function(tag, params) {
+                var canvas = document.getElementById(tag);
+                if (!canvas) return;
+                
+                var ctx = canvas.getContext('2d');
+                var particles = [];
+                var w = canvas.width = window.innerWidth;
+                var h = canvas.height = window.innerHeight;
+
+                // 创建粒子
+                function createParticles() {
+                    particles = [];
+                    for (var i = 0; i < params.particles.number.value; i++) {
+                        particles.push({
+                            x: Math.random() * w,
+                            y: Math.random() * h,
+                            radius: Math.random() * params.particles.size.value + 0.1,
+                            color: params.particles.color.value,
+                            opacity: Math.random() * params.particles.opacity.value,
+                            speedX: (Math.random() - 0.5) * params.particles.move.speed,
+                            speedY: (Math.random() - 0.5) * params.particles.move.speed
+                        });
+                    }
+                }
+
+                // 绘制粒子
+                function drawParticles() {
+                    ctx.clearRect(0, 0, w, h);
+                    particles.forEach(function(p, index) {
+                        // 绘制粒子
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                        ctx.fillStyle = p.color;
+                        ctx.globalAlpha = p.opacity;
+                        ctx.fill();
+
+                        // 绘制连线
+                        particles.forEach(function(p2, index2) {
+                            if (index !== index2) {
+                                var dx = p.x - p2.x;
+                                var dy = p.y - p2.y;
+                                var distance = Math.sqrt(dx * dx + dy * dy);
+                                if (distance < params.particles.line_linked.distance) {
+                                    ctx.beginPath();
+                                    ctx.strokeStyle = params.particles.line_linked.color;
+                                    ctx.globalAlpha = params.particles.line_linked.opacity;
+                                    ctx.lineWidth = params.particles.line_linked.width;
+                                    ctx.moveTo(p.x, p.y);
+                                    ctx.lineTo(p2.x, p2.y);
+                                    ctx.stroke();
+                                }
+                            }
+                        });
+
+                        // 移动粒子
+                        p.x += p.speedX;
+                        p.y += p.speedY;
+
+                        // 边界检测
+                        if (p.x < 0 || p.x > w) p.speedX = -p.speedX;
+                        if (p.y < 0 || p.y > h) p.speedY = -p.speedY;
+                    });
+                }
+
+                // 鼠标交互
+                var mouse = { x: null, y: null };
+                canvas.addEventListener('mousemove', function(e) {
+                    mouse.x = e.clientX;
+                    mouse.y = e.clientY;
+                });
+
+                // 动画循环
+                function animate() {
+                    requestAnimationFrame(animate);
+                    drawParticles();
+                    
+                    // 鼠标吸附效果
+                    if (mouse.x && mouse.y) {
+                        particles.forEach(function(p) {
+                            var dx = mouse.x - p.x;
+                            var dy = mouse.y - p.y;
+                            var distance = Math.sqrt(dx * dx + dy * dy);
+                            if (distance < 140) {
+                                p.x += dx * 0.02;
+                                p.y += dy * 0.02;
+                            }
+                        });
+                    }
+                }
+
+                // 初始化
+                createParticles();
+                animate();
+
+                // 窗口大小适配
+                window.addEventListener('resize', function() {
+                    w = canvas.width = window.innerWidth;
+                    h = canvas.height = window.innerHeight;
+                    createParticles();
+                });
+            };
+
+            // 初始化粒子效果
+            particlesJS('particleCanvas', {
+                "particles": {
+                    "number": {
+                        "value": 80,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": "#4080FF"
+                    },
+                    "shape": {
+                        "type": "circle"
+                    },
+                    "opacity": {
+                        "value": 0.6,
+                        "random": true
+                    },
+                    "size": {
+                        "value": 3,
+                        "random": true
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#4080FF",
+                        "opacity": 0.2,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 1.5,
+                        "direction": "none",
+                        "random": true
+                    }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "grab"
+                        },
+                        "onclick": {
+                            "enable": true,
+                            "mode": "push"
+                        }
+                    }
+                }
+            });
+
+            // ========== 翻页逻辑 ==========
+            // 核心变量
+            const pagesContainer = document.getElementById('pages');
+            const paginationDots = document.querySelectorAll('.pagination-dot');
+            const scrollTip = document.getElementById('scrollTip');
+            const pageLinks = document.querySelectorAll('.page-link');
+            let currentPage = 0;
+            const totalPages = document.querySelectorAll('.page').length;
+
+            // 翻页函数
+            function goToPage(pageIndex) {
+                if (pageIndex < 0 || pageIndex >= totalPages) return;
+                currentPage = pageIndex;
+                pagesContainer.style.transform = `translateY(-${currentPage * 100}vh)`;
+                paginationDots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentPage);
+                });
+                scrollTip.style.display = currentPage === totalPages - 1 ? 'none' : 'block';
+            }
+
+            // 鼠标滚轮翻页
+            document.addEventListener('wheel', (e) => {
+                if (e.deltaY > 0) {
+                    goToPage(currentPage + 1);
+                } else {
+                    goToPage(currentPage - 1);
+                }
+            }, { passive: true });
+
+            // 键盘上下键翻页
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowDown') {
+                    goToPage(currentPage + 1);
+                } else if (e.key === 'ArrowUp') {
+                    goToPage(currentPage - 1);
+                }
+            });
+
+            // 点击指示器翻页
+            paginationDots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    const pageIndex = parseInt(dot.dataset.page);
+                    goToPage(pageIndex);
+                });
+            });
+
+            // 点击提示箭头翻页
+            scrollTip.addEventListener('click', () => {
+                goToPage(currentPage + 1);
+            });
+
+            // 导航栏链接跳转
+            pageLinks.forEach((link, index) => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    goToPage(index);
+                });
+            });
+
+            // 初始化隐藏最后一页的提示箭头
+            if (totalPages === 1) {
+                scrollTip.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
